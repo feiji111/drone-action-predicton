@@ -2,7 +2,6 @@ gyd/
 swanlog/
 output/
 checkpoints_multimodal/
-assets/
 __pycache__/
 logs/
 misc/
