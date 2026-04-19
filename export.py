@@ -200,12 +200,13 @@ def quantize_int8(args, fp32_path, int8_path, input_names):
             model_output=int8_path,
             calibration_data_reader=reader,
             activation_type=QuantType.QInt8,
-            weight_type=QuantType.QUInt8,
+            weight_type=QuantType.QInt8,
             quant_format=QuantFormat.QDQ,
             per_channel=True,
             calibrate_method=CalibrationMethod.MinMax,
         )
     else:
+        # BUG: BUG exists, reference https://github.com/microsoft/onnxruntime/issues/25890
         quantize_dynamic(
             model_input=fp32_path,
             model_output=int8_path,
@@ -232,12 +233,10 @@ def export_model(args):
     fp32_path, input_names = export_fp32_onnx(model, args, fp32_path)
     print(f"Exported FP32 ONNX: {fp32_path}")
 
-    if args.disable_int8:
-        return
-
-    int8_path = os.path.join(args.output_dir, f"{args.output_name}.int8.onnx")
-    quant_mode = quantize_int8(args, fp32_path, int8_path, input_names)
-    print(f"Exported INT8 ONNX ({quant_mode}): {int8_path}")
+    if args.enable_int8:
+        int8_path = os.path.join(args.output_dir, f"{args.output_name}.int8.onnx")
+        quant_mode = quantize_int8(args, fp32_path, int8_path, input_names)
+        print(f"Exported INT8 ONNX ({quant_mode}): {int8_path}")
 
 
 def main():
