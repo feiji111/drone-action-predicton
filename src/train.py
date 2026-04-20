@@ -38,7 +38,7 @@ def train_epoch(model, data, optimizer, scheduler, loss, args, epoch):
             with_stack=True,
         )
     else:
-        prof = nullcontext
+        prof = nullcontext()
 
     with prof:
         for i, batch in enumerate(dataloader):
